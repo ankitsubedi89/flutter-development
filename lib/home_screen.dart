@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_my_first_project/controller/counter.dart';
 import 'package:flutter_my_first_project/views/components/my_button.dart';
 import 'package:flutter_my_first_project/views/pages/second_screen.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,38 +14,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int counter = 0;
+  final counter = Get.put(Counter());
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
-            Text(
-              counter.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            Obx(
+              () => Text(
+                counter.count.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 MyButton(
-                  onTap: () => add(),
+                  onTap: () {
+                    counter.increment();
+                  },
                   text: '+',
                 ),
                 MyButton(
-                  onTap: () => sub(),
+                  onTap: () {
+                    counter.decrement();
+                  },
                   text: '-',
                 ),
               ],
             ),
             MyButton(
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => SecondScreen(
-                              counter: counter,add: add, sub: sub
-                            )));
+                Get.to(() => const SecondScreen());
               },
               text: 'Next Page',
             ),
@@ -51,15 +54,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  add() {
-    counter = counter + 1;
-    setState(() {});
-  }
-
-  sub() {
-    counter = counter - 1;
-    setState(() {});
   }
 }

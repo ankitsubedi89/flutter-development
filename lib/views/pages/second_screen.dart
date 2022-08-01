@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_my_first_project/controller/counter.dart';
 import 'package:flutter_my_first_project/views/components/my_button.dart';
+import 'package:get/get.dart';
 
 class SecondScreen extends StatefulWidget {
-  final int counter;
-  final add;
-  final sub;
   const SecondScreen(
-      {Key? key, required this.counter, required this.add, required this.sub})
+      {Key? key,})
       : super(key: key);
 
   @override
@@ -16,11 +13,10 @@ class SecondScreen extends StatefulWidget {
 }
 
 class _SecondScreenState extends State<SecondScreen> {
-  int newCounter = 0;
+  final counter = Get.find<Counter>();
   @override
   void initState() {
     super.initState();
-    newCounter = widget.counter;
   }
 
   @override
@@ -29,20 +25,26 @@ class _SecondScreenState extends State<SecondScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            Center(
-                child: Text(
-              newCounter.toString(),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-            )),
+            Obx(()=>
+               Center(
+                  child: Text(
+                counter.count.toString(),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              )),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 MyButton(
-                  onTap: () => secondAdd(),
+                  onTap: () {
+                    counter.increment();
+                  },
                   text: '+',
                 ),
                 MyButton(
-                  onTap: () => secondSub(),
+                  onTap: () => {
+                    counter.decrement()
+                  },
                   text: '-',
                 ),
               ],
@@ -57,17 +59,5 @@ class _SecondScreenState extends State<SecondScreen> {
         ),
       ),
     );
-  }
-
-  secondAdd() {
-    newCounter++;
-    widget.add();
-    setState(() {});
-  }
-
-  secondSub() {
-    newCounter--;
-    widget.sub();
-    setState(() {});
   }
 }
